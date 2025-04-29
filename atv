@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulador Solar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      padding: 20px;
+    } 
+    h1, h2 {
+      color: #007BFF;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #007BFF;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .results {
+      margin-top: 30px;
+      background: #e9f7ef;
+      padding: 15px;
+      border-left: 5px solid #28a745;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Simulador de Energia Solar</h1>
+    <label for="irradiance">Radiação Solar Média (kWh/m²/dia):</label>
+    <input type="number" id="irradiance" step="0.1" required>
+
+    <label for="area">Área Disponível (m²):</label>
+    <input type="number" id="area" required>
+
+    <label for="efficiency">Eficiência do Sistema (%):</label>
+    <input type="number" id="efficiency" step="0.1" required>
+
+    <label for="cost_kwh">Custo da Energia (R$/kWh):</label>
+    <input type="number" id="cost_kwh" step="0.01" required>
+
+    <button onclick="calcular()">Calcular</button>
+
+    <div id="output" class="results" style="display:none;">
+      <h2>Resultados:</h2>
+      <p id="energy"></p>
+      <p id="economy"></p>
+      <p id="co2"></p>
+    </div>
+  </div>
+
+  <script>
+    function calcular() {
+      const irradiance = parseFloat(document.getElementById('irradiance').value);
+      const area = parseFloat(document.getElementById('area').value);
+      const efficiency = parseFloat(document.getElementById('efficiency').value) / 100;
+      const cost_kwh = parseFloat(document.getElementById('cost_kwh').value);
+
+      const diasMes = 30;
+      const energiaMensal = irradiance * area * efficiency * diasMes; // kWh/mês
+      const economiaMensal = energiaMensal * cost_kwh;
+      const co2Evitado = energiaMensal * 0.085; // 0.085 kg CO2 evitado por kWh médio
+
+      document.getElementById('energy').innerText = `Geração estimada: ${energiaMensal.toFixed(2)} kWh/mês`;
+      document.getElementById('economy').innerText = `Economia mensal: R$ ${economiaMensal.toFixed(2)}`;
+      document.getElementById('co2').innerText = `CO₂ evitado: ${co2Evitado.toFixed(2)} kg/mês`;
+      
+      document.getElementById('output').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
